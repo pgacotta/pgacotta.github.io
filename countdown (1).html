@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contagem Regressiva</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f7f7f5;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      gap: 3rem;
+    }
+
+    /* ── HERO ── */
+    .hero { text-align: center; }
+
+    .hero-title {
+      font-size: 0.72rem;
+      color: #bbb;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-time {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0.1rem;
+    }
+
+    .unit-block { text-align: center; padding: 0 0.6rem; }
+
+    .unit-block .num {
+      font-size: 5rem;
+      font-weight: 300;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .unit-block .lbl {
+      font-size: 0.62rem;
+      color: #bbb;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
+
+    .colon {
+      font-size: 4rem;
+      font-weight: 300;
+      color: #ddd;
+      line-height: 1;
+      padding-top: 0.05em;
+      user-select: none;
+    }
+
+    .hero-sublabel {
+      margin-top: 1rem;
+      font-size: 0.72rem;
+      color: #bbb;
+    }
+
+    hr {
+      width: 40px;
+      border: none;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    /* ── SIDE CARDS ── */
+    .cards {
+      display: flex;
+      gap: 0;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card { text-align: center; padding: 0 2rem; }
+
+    .card-num {
+      font-size: 2.4rem;
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .card-num.past { color: #ccc; }
+
+    .card-unit {
+      margin-top: 0.15rem;
+      font-size: 0.63rem;
+      color: #bbb;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .card-name {
+      margin-top: 0.55rem;
+      font-size: 0.76rem;
+      font-weight: 500;
+      color: #555;
+    }
+
+    .card-date {
+      margin-top: 0.2rem;
+      font-size: 0.68rem;
+      color: #bbb;
+    }
+
+    .sep {
+      width: 1px;
+      height: 44px;
+      background: #e0e0e0;
+      align-self: center;
+    }
+
+    @media (max-width: 600px) {
+      .unit-block .num { font-size: 3.2rem; }
+      .colon { font-size: 2.6rem; }
+      .unit-block { padding: 0 0.35rem; }
+      .sep { display: none; }
+      .card { padding: 0 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-title">Fim do Semestre · 22 de Junho de 2026</div>
+    <div class="hero-time">
+      <div class="unit-block">
+        <div class="num" id="h-days">00</div>
+        <div class="lbl">dias</div>
+      </div>
+      <div class="colon">:</div>
+      <div class="unit-block">
+        <div class="num" id="h-hours">00</div>
+        <div class="lbl">horas</div>
+      </div>
+      <div class="colon">:</div>
+      <div class="unit-block">
+        <div class="num" id="h-min">00</div>
+        <div class="lbl">min</div>
+      </div>
+      <div class="colon">:</div>
+      <div class="unit-block">
+        <div class="num" id="h-sec">00</div>
+        <div class="lbl">seg</div>
+      </div>
+    </div>
+  </div>
+
+  <hr />
+
+  <!-- CARDS -->
+  <div class="cards">
+    <div class="card">
+      <div class="card-num" id="c0">—</div>
+      <div class="card-unit" id="u0">dias</div>
+      <div class="card-name">Projeto Integrador</div>
+      <div class="card-date">27 de Maio de 2026</div>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="card">
+      <div class="card-num" id="c1">—</div>
+      <div class="card-unit" id="u1">dias</div>
+      <div class="card-name">3ª Prova · Direito das Coisas</div>
+      <div class="card-date">16 de Junho de 2026</div>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="card">
+      <div class="card-num" id="c2">—</div>
+      <div class="card-unit" id="u2">dias</div>
+      <div class="card-name">3ª Prova · Direito de Família</div>
+      <div class="card-date">17 de Junho de 2026</div>
+    </div>
+  </div>
+
+  <script>
+    const pad = n => String(n).padStart(2, '0');
+
+    function secondsUntil(y, m, d) {
+      return Math.floor((new Date(y, m - 1, d) - Date.now()) / 1000);
+    }
+
+    function daysUntil(y, m, d) {
+      const today = new Date();
+      const t = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      return Math.round((new Date(y, m - 1, d) - t) / 86400000);
+    }
+
+    function setCard(numId, unitId, days) {
+      const n = document.getElementById(numId);
+      const u = document.getElementById(unitId);
+      if (days < 0) {
+        n.textContent = '✓'; u.textContent = 'encerrado'; n.classList.add('past');
+      } else if (days === 0) {
+        n.textContent = 'hoje'; u.textContent = '';
+      } else {
+        n.textContent = days; u.textContent = days === 1 ? 'dia' : 'dias';
+      }
+    }
+
+    function update() {
+      // Hero precise countdown
+      let total = secondsUntil(2026, 6, 22);
+      if (total < 0) total = 0;
+
+      const days  = Math.floor(total / 86400);
+      const hours = Math.floor((total % 86400) / 3600);
+      const mins  = Math.floor((total % 3600) / 60);
+      const secs  = total % 60;
+
+      document.getElementById('h-days').textContent  = days;
+      document.getElementById('h-hours').textContent = pad(hours);
+      document.getElementById('h-min').textContent   = pad(mins);
+      document.getElementById('h-sec').textContent   = pad(secs);
+
+      // Side cards (days only)
+      setCard('c0', 'u0', daysUntil(2026, 5, 27));
+      setCard('c1', 'u1', daysUntil(2026, 6, 16));
+      setCard('c2', 'u2', daysUntil(2026, 6, 17));
+    }
+
+    update();
+    setInterval(update, 1000);
+  </script>
+</body>
+</html>
